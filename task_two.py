@@ -16,6 +16,12 @@ def write_output_to_file(filename: str, output: str) -> None:
 
 
 def get_names(urls: List[str]) -> List[str]:
+    """
+    Extracts name from each url's json data and stores in list.
+    Returns the list of names of each resource from film1.
+    :param urls: list of urls of resources
+    :return: list of names of each resource
+    """
     names = []
     # [fetch_data(url).get('name') for url in urls]   - using list comprehension
     # list(map(lambda x: fetch_data(x).get('name'), urls))  - using higher order function map
@@ -25,14 +31,19 @@ def get_names(urls: List[str]) -> List[str]:
     return names
 
 
-def get_film_title(url):
+def get_film_title(url: str) -> str:
+    """
+    Returns title of film1
+    :param url: url of film1
+    :return: title of film1
+    """
     details = fetch_data(url)
     return details.get('title')
 
 
-def do_task_two():
+def do_task_two() -> None:
     """
-    Get names of characters, planets and vehicles from film1
+    Gets names of characters, planets and vehicles from film1 and prints them.
     """
     data = fetch_data(film1_url)  # details of film1
     characters = data.get('characters')  # characters in film1
