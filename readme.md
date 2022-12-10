@@ -44,3 +44,19 @@ example:
     1. get count of each resource
     2. get "singular" resource urls of each resource
     3. pull data from random 3 "singular" resource URLs
+
+
+### Setup
+
+## Create virtualenv
+```
+virtualenv venv
+```
+### Activate virtualenv
+```
+source venv/bin/activate
+```
+### Install dependencies (using virtual environment is recommended):
+```
+pip install -r requirements.txt
+```
