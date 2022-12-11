@@ -3,6 +3,17 @@
 #### Project Structure
 ```
 |--- swapi_mini
+   |---models
+       |--- __init__.py
+       |--- basemodel.py
+       |--- datamodels
+          |--- __init__.py
+          |--- characters.py
+          |--- films.py
+          |--- planets.py
+          |--- species.py
+          |--- starships.py
+          |--- vehicles.py
    |--- resources
        |--- __init__.py
        |--- base.py
@@ -18,6 +29,7 @@
        |--- logger.py
        |--- randgen.py
        |--- timeit.py
+   |--- database_.sql
    |--- main.py
    |--- output.txt
    |--- readme.md
