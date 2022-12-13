@@ -33,6 +33,6 @@ class Vehicles(ResourceBase):
         resource_url = self.home_url + self.relative_url
         return resource_url
 
-    def get_sample_data(self, id_="1"):
+    def get_sample_data(self, id_="4"):
         sample_url = self.get_resource_urls() + id_
         return fetch_data(sample_url)
