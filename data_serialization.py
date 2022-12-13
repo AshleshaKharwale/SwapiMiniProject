@@ -1,3 +1,4 @@
+# pydantic modules
 from models.datamodels.characters import Character as Char
 from models.datamodels.films import Films as Film
 from models.datamodels.planets import Planets as Plan
@@ -5,6 +6,7 @@ from models.datamodels.species import Species as Spec
 from models.datamodels.starships import Starships as Star
 from models.datamodels.vehicles import Vehicles as Vehi
 
+# resource classes
 from resources.characters import Characters
 from resources.films import Films
 from resources.planets import Planets
