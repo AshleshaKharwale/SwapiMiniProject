@@ -2,10 +2,10 @@ import json
 from models.basemodel import Base
 from typing import List, Optional
 from pprint import pprint
+from pydantic import validator
 
 
 class Character(Base):
-
     # Attribute fields
     name: str
     height: str
@@ -22,6 +22,18 @@ class Character(Base):
     species: Optional[List[str]]
     vehicles: Optional[List[str]]
     starships: Optional[List[str]]
+
+    breakpoint()
+
+    # @validator("height")
+    # def height_validation(cls):
+    #     # The height of the person is in centimeters. Converting to meters
+    #     if isinstance(cls.height, str):
+    #         height = int(cls.height) / 100  # cm to meter
+    #         cls.height = height
+    #         return cls.height
+    #     else:
+    #         raise ValueError("height is not valid")
 
 
 if __name__ == "__main__":
