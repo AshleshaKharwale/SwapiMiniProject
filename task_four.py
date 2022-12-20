@@ -21,59 +21,103 @@ TODO
 
 """
 
-from pprint import pprint
+from datetime import datetime
 from multiprocessing.pool import ThreadPool
 from resources.films import Films
 from utils.fetch_data import fetch_data
 from models.datamodels.films import Films as Films_
-from dal.sample import get_db_conn
+from models.datamodels.characters import Characters
+from models.datamodels.planets import Planets
+from models.datamodels.vehicles import Vehicles
+from models.datamodels.species import Species
+from models.datamodels.starships import Starships
+from dal.sample import insert_resource
+
+
+def remove_cross_reference(data_set):
+
+    data_set = dict(data_set)
+    new_data = data_set.copy()
+    for key, value in data_set.items():
+        if isinstance(value, list):     # removing cross-reference fields from data object
+            new_data.pop(key)
+        elif isinstance(value, datetime):   # converting datetime object to str date
+            new_data[key] = new_data[key].strftime("%Y-%m-%d")
+        elif isinstance(value, type(None)):  # replace None with Null
+            new_data[key] = 'Null'
+
+    return new_data
+
+
+def fetch_url_data(url_list):
+    # fetching data for each resource endpoint from film_1
+    pool = ThreadPool(25)
+    url_data = pool.map(fetch_data, url_list)   # Return data for all urls
+    return url_data
+
+
+def validate_data(resource, validator):
+    new_data = []
+    for data in resource:
+        # breakpoint()
+        data = validator(**data)    # validates each url data using pydantic datamodels
+        new = remove_cross_reference(data)  # removes cross-reference fields from each url data
+        new_data.append(new)
+    return new_data
 
 
 if __name__ == "__main__":
     # pull data for the movie "A New Hope"
+    # breakpoint()
     film_data = Films().get_sample_data()
     film_data = Films_(**film_data)
-    # pprint(film_data)
-
-    # Replace the data for each of the endpoint listed in the JSON object
-    #  and insert that data into respective database tables
 
     # fetching urls of each resource in film_1
     charlist = film_data.characters
-    # planetlist = film_data.get("planets")
-    # specieslist = film_data.get("species")
-    # starshipslist = film_data.get("starships")
-    # vehiclelist = film_data.get("vehicles")
+    planetlist = film_data.planets
+    specieslist = film_data.species
+    starshipslist = film_data.starships
+    vehiclelist = film_data.vehicles
 
-    # fetching data for each resource endpoint from film_1
-    pool = ThreadPool(10)
-    char_data = pool.map(fetch_data, charlist)
-    # planet_data = [fetch_data(planet) for planet in planetlist]
-    # species_data = [fetch_data(species) for species in specieslist]
-    # starship_data = [fetch_data(starship) for starship in starshipslist]
-    # vehicle_data = [fetch_data(vehicle) for vehicle in vehiclelist]
+    # Replace the data for each of the endpoint listed in the JSON object.
+    char_data = fetch_url_data(charlist)
+    planet_data = fetch_url_data(planetlist)
+    species_data = fetch_url_data(specieslist)
+    starships_data = fetch_url_data(starshipslist)
+    vehicle_data = fetch_url_data(vehiclelist)
 
-    def remove_cross_reference(all_data_set):
-        data = []
-        for data_set in all_data_set:
-            new_data = data_set.copy()
-            for key, value in data_set.items():
-                if isinstance(value, list):
-                    new_data.pop(key)
-            data.append(new_data)
-        return data
+    # remove all cross-referencing URLs from each resource and validate data using datamodels
+    char_data = validate_data(char_data, Characters)
+    planet_data = validate_data(planet_data, Planets)
+    species_data = validate_data(species_data, Species)
+    starships_data = validate_data(starships_data, Starships)
+    vehicle_data = validate_data(vehicle_data, Vehicles)
 
-    char_data = remove_cross_reference(char_data)
-    # planet_data = remove_cross_reference(planet_data)
-    # vehicle_data = remove_cross_reference(vehicle_data)
-    # species_data = remove_cross_reference(species_data)
-    # starship_data = remove_cross_reference(starship_data)
+    #  and insert that data into respective database tables
+    char_table = "characters"
+    for data in char_data:
+        print(f"rows affected - {insert_resource(char_table, data)}")
 
-    def insert_into_table(table_name, data):
-        with get_db_conn() as conn:
-            cursor = conn.cursor()
-            return cursor.execute(f"insert into {table_name} values ({data})")
+    planet_table = "planet"
+    for data in planet_data:
+        print(f"rows affected - {insert_resource(planet_table, data)}")
 
-    pprint(char_data)
-    print(insert_into_table("characters", char_data))
+    vehicle_table = "vehicle"
+    for data in vehicle_data:
+        print(f"rows affected - {insert_resource(vehicle_table, data)}")
+
+    starship_table = "starship"
+    for data in starships_data:
+        print(f"rows affected - {insert_resource(starship_table, data)}")
+
+    species_table = "species"
+    # breakpoint()
+    for data in species_data:
+        print(f"rows affected - {insert_resource(species_table, data)}")
+
+    film_table = "film"
+    film_data = remove_cross_reference(film_data)
+    # breakpoint()
+    print(f"rows affected - {insert_resource(film_table, film_data)}")
+
 

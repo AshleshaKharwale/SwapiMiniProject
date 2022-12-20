@@ -5,7 +5,7 @@ from pprint import pprint
 from pydantic import validator
 
 
-class Character(Base):
+class Characters(Base):
     # Attribute fields
     name: str
     height: str
@@ -23,17 +23,17 @@ class Character(Base):
     vehicles: Optional[List[str]]
     starships: Optional[List[str]]
 
-    breakpoint()
+    # breakpoint()
 
-    # @validator("height")
-    # def height_validation(cls):
-    #     # The height of the person is in centimeters. Converting to meters
-    #     if isinstance(cls.height, str):
-    #         height = int(cls.height) / 100  # cm to meter
-    #         cls.height = height
-    #         return cls.height
-    #     else:
-    #         raise ValueError("height is not valid")
+    @validator("height")
+    def height_validation(cls, height):
+        # The height of the person is in centimeters. Converting to meters
+        if isinstance(height, str):
+            height = int(height) / 100  # cm to meter
+            cls.height = height
+            return cls.height
+        else:
+            raise ValueError("height is not valid")
 
 
 if __name__ == "__main__":
@@ -70,9 +70,9 @@ if __name__ == "__main__":
         "url": "https://swapi.dev/api/people/1/"
     }
 
-    char = Character(**data)
+    breakpoint()
+    char = Characters(**data)
     pprint(char)
     # for i in char:
     #     print(i)
-
     pprint(dict(char))
