@@ -23,6 +23,8 @@ TODO
 
 from datetime import datetime
 from multiprocessing.pool import ThreadPool
+import pydantic
+from typing import List, Dict
 from resources.films import Films
 from utils.fetch_data import fetch_data
 from models.datamodels.films import Films as Films_
@@ -31,11 +33,21 @@ from models.datamodels.planets import Planets
 from models.datamodels.vehicles import Vehicles
 from models.datamodels.species import Species
 from models.datamodels.starships import Starships
-from dal.sample import insert_resource
+from dal.dml import insert_resource
 
 
-def remove_cross_reference(data_set):
+def remove_cross_reference(data_set: "pydantic datamodel object") -> Dict:
+    """
+    1. Takes pydantic datamodel object as argument of any resource.
+    2. Converts it to dictionary data type.
+    3. Removes cross-reference fields if any. (ex., character["url1","url2"])
+    4. Converts datetime object to string date in format - "YYYY-MM-DD"
+    5. If any field contain None value, converts it into Null, so that it can be inserted into the database.
+    6. Returns this formatted dictionary.
 
+    :param data_set: validated pydantic data model object
+    :return: Dictionary
+    """
     data_set = dict(data_set)
     new_data = data_set.copy()
     for key, value in data_set.items():
@@ -49,14 +61,33 @@ def remove_cross_reference(data_set):
     return new_data
 
 
-def fetch_url_data(url_list):
+def fetch_url_data(url_list: List[str]) -> List[Dict]:
+    """
+    1. Hits each url in url list.
+    2. Uses ThreadPool to hit urls concurrently and fetches data for each url using map function.
+    3. Returns list of dictionary (endpoints data) of each url/api endpoint
+    :param url_list: list containing api endpoints
+    :return: list of respective endpoint data in json/dict format
+    """
     # fetching data for each resource endpoint from film_1
     pool = ThreadPool(25)
-    url_data = pool.map(fetch_data, url_list)   # Return data for all urls
+    url_data = pool.map(fetch_data, url_list)  # Return data for all urls.
+    # map() function returns list
     return url_data
 
 
-def validate_data(resource, validator):
+def validate_data(resource: Dict, validator: "pydantic datamodel") -> List[Dict]:
+    """
+    For each data in 'resource'-
+    1. Does data validation using pydantic datamodel - 'validator'
+    2. Removes all fields containing cross-reference urls
+    3. appends to new list
+    Returns list of dictionary(validated data)
+
+    :param resource: Dictionary of resource data fetched from swapi in json format
+    :param validator: pydantic datamodel for data validation
+    :return: List of validated data in the Dictionary format
+    """
     new_data = []
     for data in resource:
         # breakpoint()
