@@ -25,16 +25,10 @@ def get_db_conn() -> Connection:
     :return: connection object of pymysql
     """
     # connection to database
-    with open("secrets.yaml") as creds:
+    with open("settings/secrets.yaml") as creds:
         doc = yaml.load(creds, Loader=yaml.FullLoader)
 
-    config = doc
-    connection = pymysql.connect(
-        host="localhost",
-        user="root",
-        password="Ash@95kh",
-        database="starwarsdb"
-    )
+    connection = pymysql.connect(**doc)
     # breakpoint()
     print(f"Connected to MySQL database - '{connection.db.decode()}'")  # prints database name
 
@@ -81,11 +75,13 @@ if __name__ == "__main__":
     #     print("MySQL database connection closed")
 
     # insert_resource("species_sample", {'average_lifespan': '10 months', 'average_height':'7.3 cm'})
-    filename = "settings\secrets.yaml"
-    c_file = __file__
-    c_dir = os.path.dirname(c_file)
-    abs_path = os.path.join(c_dir, filename)
-    print(f"current file - {c_file}")
-    print(f"current directory - {c_dir}")
-    print(f"absolute file path - {abs_path}")
-    print(os.path.exists(abs_path))
+    # filename = "settings\secrets.yaml"
+    # c_file = __file__
+    # c_dir = os.path.dirname(c_file)
+    # abs_path = os.path.join(c_dir, filename)
+    # print(f"current file - {c_file}")
+    # print(f"current directory - {c_dir}")
+    # print(f"absolute file path - {abs_path}")
+    # print(os.path.exists(abs_path))
+
+    # get_db_conn()
