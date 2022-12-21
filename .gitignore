@@ -2,5 +2,6 @@
 *.xml
 venv
 *.log
-.idea
-.yaml
+*.idea
+*.yaml
+*.toml

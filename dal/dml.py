@@ -11,28 +11,9 @@ GRANT ALL PRIVILEGES ON *.* TO adam WITH GRANT OPTION;
 SHOW GRANTS FOR adam;
 
 """
-import os
-import pymysql
-import yaml
-from pymysql import Connection
 from typing import Dict
+from dal.db_conn_helper import get_db_conn
 
-
-
-def get_db_conn() -> Connection:
-    """
-    Returns connection object of database "starwarsDB", for user "root", host "localhost".
-    :return: connection object of pymysql
-    """
-    # connection to database
-    with open("settings/secrets.yaml") as creds:
-        doc = yaml.load(creds, Loader=yaml.FullLoader)
-
-    connection = pymysql.connect(**doc)
-    # breakpoint()
-    print(f"Connected to MySQL database - '{connection.db.decode()}'")  # prints database name
-
-    return connection
 
 
 def insert_resource(table_name: str, data: Dict) -> "cursor output":
@@ -75,13 +56,5 @@ if __name__ == "__main__":
     #     print("MySQL database connection closed")
 
     # insert_resource("species_sample", {'average_lifespan': '10 months', 'average_height':'7.3 cm'})
-    # filename = "settings\secrets.yaml"
-    # c_file = __file__
-    # c_dir = os.path.dirname(c_file)
-    # abs_path = os.path.join(c_dir, filename)
-    # print(f"current file - {c_file}")
-    # print(f"current directory - {c_dir}")
-    # print(f"absolute file path - {abs_path}")
-    # print(os.path.exists(abs_path))
 
-    # get_db_conn()
+    get_db_conn()
