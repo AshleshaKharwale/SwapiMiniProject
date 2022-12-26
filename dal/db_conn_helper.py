@@ -31,13 +31,14 @@ def get_db_conn_toml() -> Connection:
 
 
 # filename = "settings\secrets.yaml"
-    # c_file = __file__
-    # c_dir = os.path.dirname(c_file)
-    # abs_path = os.path.join(c_dir, filename)
-    # print(f"current file - {c_file}")
-    # print(f"current directory - {c_dir}")
-    # print(f"absolute file path - {abs_path}")
-    # print(os.path.exists(abs_path))
+# c_file = __file__  # current file path
+# c_dir = os.path.dirname(c_file)  # current directory
+# abs_path = os.path.join(c_dir, filename)  # creates absolute path out of
+# current directory and given file name
+# print(f"current file - {c_file}")
+# print(f"current directory - {c_dir}")
+# print(f"absolute file path - {abs_path}")
+# print(os.path.exists(abs_path))  # checks if given file path exists or not
 
 if __name__ == "__main__":
     get_db_conn_toml()
