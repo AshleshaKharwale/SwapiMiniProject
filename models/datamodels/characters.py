@@ -28,18 +28,19 @@ class Characters(Base):
     @validator("height")
     def height_validation(cls, height):
         # The height of the person is in centimeters. Converting to meters
-        if isinstance(height, str):
+        if height.isdigit():
             height = int(height) / 100  # cm to meter
             cls.height = height
-            return cls.height
+            return str(cls.height)
         else:
-            raise ValueError("height is not valid")
+            cls.height = height
+            return cls.height
 
 
 if __name__ == "__main__":
     data = {
         "name": "Luke Skywalker",
-        "height": "172",
+        "height": "182",
         "mass": "77",
         "hair_color": "blond",
         "skin_color": "fair",
@@ -70,7 +71,6 @@ if __name__ == "__main__":
         "url": "https://swapi.dev/api/people/1/"
     }
 
-    breakpoint()
     char = Characters(**data)
     pprint(char)
     # for i in char:

@@ -26,6 +26,7 @@ def insert_resource(table_name: str, data: Dict) -> "cursor output":
     :return: cursor output
     """
     sql_query = f"insert into {table_name} ({', '.join(data.keys())}) values {tuple(data.values())}"
+    # breakpoint()
     # Generates query with table_name, dictionary keys as column names and
     # dictionary values as values.
     with get_db_conn() as conn:  # creates connection to database - 'starwarsDB'
@@ -55,6 +56,5 @@ if __name__ == "__main__":
     #     print(result2)
     #     print("MySQL database connection closed")
 
-    # insert_resource("species_sample", {'average_lifespan': '10 months', 'average_height':'7.3 cm'})
-
-    get_db_conn()
+    insert_resource("species_sample", {'average_lifespan': '10 months', 'average_height':'7.3 cm'})
+    # get_db_conn()

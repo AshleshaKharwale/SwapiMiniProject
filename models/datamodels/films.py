@@ -80,3 +80,4 @@ if __name__ == "__main__":
 
     film_obj = Films(**film_data)
     pprint(film_obj)
+    print(type(film_obj))

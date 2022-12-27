@@ -76,7 +76,7 @@ def fetch_url_data(url_list: List[str]) -> List[Dict]:
     return url_data
 
 
-def validate_data(resource: Dict, validator: "pydantic datamodel") -> List[Dict]:
+def validate_data(resource: List[Dict], validator: "pydantic datamodel") -> List[Dict]:
     """
     For each data in 'resource'-
     1. Does data validation using pydantic datamodel - 'validator'
@@ -99,8 +99,8 @@ def validate_data(resource: Dict, validator: "pydantic datamodel") -> List[Dict]
 
 if __name__ == "__main__":
     # pull data for the movie "A New Hope"
-    # breakpoint()
     film_data = Films().get_sample_data()
+    breakpoint()
     film_data = Films_(**film_data)
 
     # fetching urls of each resource in film_1
@@ -150,5 +150,3 @@ if __name__ == "__main__":
     film_data = remove_cross_reference(film_data)
     # breakpoint()
     print(f"rows affected - {insert_resource(film_table, film_data)}")
-
-
